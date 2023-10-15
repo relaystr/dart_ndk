@@ -11,6 +11,15 @@ class PubkeyMapping {
     required this.rwMarker,
   });
 
+  // overwrite == operator
+  @override
+  bool operator ==(covariant PubkeyMapping other) {
+    return pubKey == other.pubKey && rwMarker == other.rwMarker;
+  }
+
+  @override
+  int get hashCode => pubKey.hashCode ^ rwMarker.hashCode;
+
   bool isRead() {
     return rwMarker.isRead;
   }

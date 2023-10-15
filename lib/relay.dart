@@ -9,7 +9,15 @@ class Relay {
 
   Relay(this.url);
 
+  @override
+  bool operator ==(covariant Relay other) {
+    return url == other.url;
+  }
+
+  @override
+  int get hashCode => url.hashCode;
+
   bool supportsNip(int nip) {
-    return info!=null && info!.nips.contains(nip);
+    return info != null && info!.nips.contains(nip);
   }
 }
