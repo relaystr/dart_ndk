@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:dart_ndk/dart_ndk.dart';
 import 'package:dart_ndk/models/relay_set.dart';
+import 'package:dart_ndk/native.dart';
 import 'package:dart_ndk/nips/nip01/bip340.dart';
 import 'package:dart_ndk/nips/nip01/event.dart';
 import 'package:dart_ndk/nips/nip01/filter.dart';
@@ -49,6 +50,7 @@ void main() async {
 
   group('Relay Manager', () {
     test('Connect to relay', () async {
+      print("RUST SAYS:${await api.helloWorld(pubKey: "pubKey", sig: "sig", message: "message")}");
 
       MockRelay relay1 = MockRelay(name: "relay 1");
       await relay1.startServer();

@@ -32,3 +32,4 @@ build/
 /lcov_badge_generator
 /.flutter-plugins
 /.flutter-plugins-dependencies
+/native/target/
