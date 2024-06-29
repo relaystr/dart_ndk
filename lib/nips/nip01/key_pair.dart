@@ -11,7 +11,8 @@ class KeyPair {
   /// [publicKeyBech32] is a human readable public key e.g. npub
   String? publicKeyBech32;
 
-  KeyPair(this.privateKey, this.publicKey, this.privateKeyBech32, this.publicKeyBech32);
+  KeyPair(this.privateKey, this.publicKey, this.privateKeyBech32,
+      this.publicKeyBech32);
 
   KeyPair.justPublicKey(this.publicKey);
 

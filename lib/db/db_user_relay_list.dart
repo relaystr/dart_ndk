@@ -8,7 +8,6 @@ part 'db_user_relay_list.g.dart';
 
 @Collection(inheritance: false)
 class DbUserRelayList extends UserRelayList {
-
   String get id => pubKey;
 
   @override
@@ -20,21 +19,27 @@ class DbUserRelayList extends UserRelayList {
   @override
   int get refreshedTimestamp => super.refreshedTimestamp;
 
-  List<DbRelayListItem> get items =>
-      super.relays.entries.map((entry) =>
-          DbRelayListItem(entry.key, entry.value)).toList();
+  List<DbRelayListItem> get items => super
+      .relays
+      .entries
+      .map((entry) => DbRelayListItem(entry.key, entry.value))
+      .toList();
 
-  DbUserRelayList({required super.pubKey, required List<DbRelayListItem> items, required super.createdAt, required super.refreshedTimestamp})
-      : super(relays: {for (var item in items)item.url : item.marker }  );
+  DbUserRelayList(
+      {required super.pubKey,
+      required List<DbRelayListItem> items,
+      required super.createdAt,
+      required super.refreshedTimestamp})
+      : super(relays: {for (var item in items) item.url: item.marker});
 
   static DbUserRelayList fromUserRelayList(UserRelayList userRelayList) {
     return DbUserRelayList(
-      pubKey: userRelayList.pubKey,
-      items: userRelayList.relays.entries.map((entry) =>
-          DbRelayListItem(entry.key, entry.value)).toList(),
-      createdAt: userRelayList.createdAt,
-      refreshedTimestamp: userRelayList.refreshedTimestamp
-    );
+        pubKey: userRelayList.pubKey,
+        items: userRelayList.relays.entries
+            .map((entry) => DbRelayListItem(entry.key, entry.value))
+            .toList(),
+        createdAt: userRelayList.createdAt,
+        refreshedTimestamp: userRelayList.refreshedTimestamp);
   }
 }
 

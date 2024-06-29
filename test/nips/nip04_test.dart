@@ -68,9 +68,11 @@ void main() {
       KeyPair key1 = Bip340.generatePrivateKey();
       var agreement = Nip04.getAgreement(key1.privateKey!);
       String content = "some content";
-      var encrypted = Nip04.encryptWithAgreement(content, agreement, key1.publicKey);
+      var encrypted =
+          Nip04.encryptWithAgreement(content, agreement, key1.publicKey);
 
-      var decrypted = Nip04.decryptWithAgreement(encrypted, agreement, key1.publicKey);
+      var decrypted =
+          Nip04.decryptWithAgreement(encrypted, agreement, key1.publicKey);
       expect(content, decrypted);
     });
   });

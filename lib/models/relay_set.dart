@@ -19,21 +19,20 @@ class RelaySet {
   RelayDirection direction;
 
   // relay url -> covered pubKeys
-  Map<String,List<PubkeyMapping>> relaysMap = {};
+  Map<String, List<PubkeyMapping>> relaysMap = {};
 
   bool fallbackToBootstrapRelays = true;
 
   List<NotCoveredPubKey> notCoveredPubkeys = [];
 
-  RelaySet({
-    required this.name,
-    required this.pubKey,
-    this.relayMinCountPerPubkey = 0,
-    required this.relaysMap,
-    this.notCoveredPubkeys = const [],
-    required this.direction,
-    this.fallbackToBootstrapRelays = true
-  });
+  RelaySet(
+      {required this.name,
+      required this.pubKey,
+      this.relayMinCountPerPubkey = 0,
+      required this.relaysMap,
+      this.notCoveredPubkeys = const [],
+      required this.direction,
+      this.fallbackToBootstrapRelays = true});
 
   static buildId(String name, String pubKey) {
     return "$name,$pubKey";
@@ -47,25 +46,35 @@ class RelaySet {
       List<PubkeyMapping> pubKeyMappings = entry.value;
       if (pubKeyMappings.isEmpty) {
         groupRequest.addRequest(url, [filter]);
-      } else if (filter.authors != null && filter.authors!.isNotEmpty && direction == RelayDirection.outbox) {
+      } else if (filter.authors != null &&
+          filter.authors!.isNotEmpty &&
+          direction == RelayDirection.outbox) {
         List<String> pubKeysForRelay = [];
         for (String pubKey in filter.authors!) {
-          if (pubKeyMappings.any((pubKeyMapping) => pubKey == pubKeyMapping.pubKey || notCoveredPubkeys.any((element) => element.pubKey == pubKey))) {
+          if (pubKeyMappings.any((pubKeyMapping) =>
+              pubKey == pubKeyMapping.pubKey ||
+              notCoveredPubkeys.any((element) => element.pubKey == pubKey))) {
             pubKeysForRelay.add(pubKey);
           }
         }
         if (pubKeysForRelay.isNotEmpty) {
-          groupRequest.addRequest(url, sliceFilterAuthors(filter.cloneWithAuthors(pubKeysForRelay)));
+          groupRequest.addRequest(url,
+              sliceFilterAuthors(filter.cloneWithAuthors(pubKeysForRelay)));
         }
-      } else if (filter.pTags != null && filter.pTags!.isNotEmpty && direction == RelayDirection.inbox) {
+      } else if (filter.pTags != null &&
+          filter.pTags!.isNotEmpty &&
+          direction == RelayDirection.inbox) {
         List<String> pubKeysForRelay = [];
         for (String pubKey in filter.pTags!) {
-          if (pubKeyMappings.any((pubKeyMapping) => pubKey == pubKeyMapping.pubKey || notCoveredPubkeys.any((element) => element.pubKey == pubKey))) {
+          if (pubKeyMappings.any((pubKeyMapping) =>
+              pubKey == pubKeyMapping.pubKey ||
+              notCoveredPubkeys.any((element) => element.pubKey == pubKey))) {
             pubKeysForRelay.add(pubKey);
           }
         }
         if (pubKeysForRelay.isNotEmpty) {
-          groupRequest.addRequest(url, sliceFilterAuthors(filter.cloneWithPTags(pubKeysForRelay)));
+          groupRequest.addRequest(
+              url, sliceFilterAuthors(filter.cloneWithPTags(pubKeysForRelay)));
         }
       } else if (filter.eTags != null && direction == RelayDirection.inbox) {
         groupRequest.addRequest(url, [filter]);
@@ -76,14 +85,18 @@ class RelaySet {
   }
 
   static List<Filter> sliceFilterAuthors(Filter filter) {
-    if (filter.authors != null && filter.authors!.length > MAX_AUTHORS_PER_REQUEST) {
-      return filter.authors!.slices(MAX_AUTHORS_PER_REQUEST).map((slice) => filter.cloneWithAuthors(slice)).toList();
+    if (filter.authors != null &&
+        filter.authors!.length > MAX_AUTHORS_PER_REQUEST) {
+      return filter.authors!
+          .slices(MAX_AUTHORS_PER_REQUEST)
+          .map((slice) => filter.cloneWithAuthors(slice))
+          .toList();
     } else {
       return [filter];
     }
   }
 
-  void addMoreRelays(Map<String,List<PubkeyMapping>> more) {
+  void addMoreRelays(Map<String, List<PubkeyMapping>> more) {
     more.forEach((key, value) {
       if (!relaysMap.keys.contains(key)) {
         relaysMap[key] = value;
@@ -98,5 +111,3 @@ class NotCoveredPubKey {
 
   NotCoveredPubKey(this.pubKey, this.coverage);
 }
-
-

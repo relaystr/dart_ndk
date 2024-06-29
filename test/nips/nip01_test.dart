@@ -40,12 +40,11 @@ void main() {
       metadata.pubKey = "pubKey1";
       Map<String, dynamic> toJson = <String, dynamic>{};
       toJson = metadata.toJson();
-      expect(data,toJson);
+      expect(data, toJson);
 
       Nip01Event event = metadata.toEvent();
       Metadata metadataFromEvent = Metadata.fromEvent(event);
-      expect(metadata,metadataFromEvent);
-
+      expect(metadata, metadataFromEvent);
     });
   });
 }

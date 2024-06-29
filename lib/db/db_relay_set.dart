@@ -26,21 +26,35 @@ class DbRelaySet extends RelaySet {
   @override
   int get relayMinCountPerPubkey => super.relayMinCountPerPubkey;
 
-  List<DbRelaySetItem> get items =>
-      super.relaysMap.entries.map((entry) =>
-          DbRelaySetItem(entry.key, dbPubkeyMappings(entry.value))).toList();
+  List<DbRelaySetItem> get items => super
+      .relaysMap
+      .entries
+      .map((entry) => DbRelaySetItem(entry.key, dbPubkeyMappings(entry.value)))
+      .toList();
 
   static List<DbPubkeyMapping> dbPubkeyMappings(List<PubkeyMapping> mappings) {
-    return mappings.map((e) => DbPubkeyMapping(pubKey: e.pubKey, marker: e.rwMarker.name),).toList();
+    return mappings
+        .map(
+          (e) => DbPubkeyMapping(pubKey: e.pubKey, marker: e.rwMarker.name),
+        )
+        .toList();
   }
 
-  DbRelaySet({required super.name, required super.pubKey, required List<DbRelaySetItem> items, required super.direction, required super.relayMinCountPerPubkey})
-      : super(relaysMap: { for (var e in items) e.url : e.pubKeyMappings });
-
+  DbRelaySet(
+      {required super.name,
+      required super.pubKey,
+      required List<DbRelaySetItem> items,
+      required super.direction,
+      required super.relayMinCountPerPubkey})
+      : super(relaysMap: {for (var e in items) e.url: e.pubKeyMappings});
 
   DbRelaySet.fromRelaySet(RelaySet set)
-      : super(name: set.name, pubKey: set.pubKey, relaysMap: set.relaysMap, direction: set.direction, relayMinCountPerPubkey: set.relayMinCountPerPubkey);
-
+      : super(
+            name: set.name,
+            pubKey: set.pubKey,
+            relaysMap: set.relaysMap,
+            direction: set.direction,
+            relayMinCountPerPubkey: set.relayMinCountPerPubkey);
 }
 
 @Embedded(inheritance: false)
@@ -50,7 +64,8 @@ class DbPubkeyMapping extends PubkeyMapping {
 
   String get marker => super.rwMarker.name;
 
-  DbPubkeyMapping({required super.pubKey, required String marker}) : super(rwMarker: fromName(marker));
+  DbPubkeyMapping({required super.pubKey, required String marker})
+      : super(rwMarker: fromName(marker));
 
   static ReadWriteMarker fromName(String name) {
     if (name == ReadWriteMarker.readOnly.name) {
@@ -61,6 +76,7 @@ class DbPubkeyMapping extends PubkeyMapping {
     return ReadWriteMarker.readWrite;
   }
 }
+
 @embedded
 class DbRelaySetItem {
   String url;
@@ -68,4 +84,3 @@ class DbRelaySetItem {
 
   DbRelaySetItem(this.url, this.pubKeyMappings);
 }
-

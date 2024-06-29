@@ -11,6 +11,8 @@ class PTagCountEventFilter extends EventFilter {
 
   @override
   bool filter(Nip01Event event) {
-    return event.kind==ContactList.KIND || event.kind==Nip65.KIND || event.pTags.length <= maxTagCount;
+    return event.kind == ContactList.KIND ||
+        event.kind == Nip65.KIND ||
+        event.pTags.length <= maxTagCount;
   }
 }

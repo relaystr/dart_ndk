@@ -28,7 +28,7 @@ class ContactList {
   ContactList.fromEvent(Nip01Event event) {
     pubKey = event.pubKey;
     createdAt = event.createdAt;
-    loadedTimestamp = DateTime.now().millisecondsSinceEpoch ~/1000;
+    loadedTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     for (var tag in event.tags) {
       if (tag is! List<dynamic>) continue;
       final length = tag.length;
@@ -72,8 +72,7 @@ class ContactList {
               bool read = entry.value["read"] ?? false;
               bool write = entry.value["write"] ?? false;
               if (read || write) {
-                map[entry.key] =
-                    ReadWriteMarker.from(read: read, write: write);
+                map[entry.key] = ReadWriteMarker.from(read: read, write: write);
               }
             } catch (e) {
               try {
@@ -88,12 +87,12 @@ class ContactList {
               } catch (e) {
                 if (kDebugMode) {
                   print(
-                    "Could not parse relay ${entry.key} , entry : ${entry.value}");
+                      "Could not parse relay ${entry.key} , entry : ${entry.value}");
                 }
               }
               if (kDebugMode) {
                 print(
-                  "Could not parse relay ${entry.key} , content : ${event.content}");
+                    "Could not parse relay ${entry.key} , content : ${event.content}");
               }
             }
           }
@@ -104,7 +103,6 @@ class ContactList {
     }
     return map;
   }
-
 
   List<List<String>> contactsToJson() {
     return contacts.map((contact) {
@@ -133,14 +131,21 @@ class ContactList {
     return Nip01Event(
       pubKey: pubKey,
       kind: ContactList.KIND,
-      tags: contactsToJson()..addAll(tagListToJson(followedTags, "t"))..addAll(tagListToJson(followedCommunities, "a"))..addAll(tagListToJson(followedEvents, "e")),
+      tags: contactsToJson()
+        ..addAll(tagListToJson(followedTags, "t"))
+        ..addAll(tagListToJson(followedCommunities, "a"))
+        ..addAll(tagListToJson(followedEvents, "e")),
       content: "",
       createdAt: createdAt,
     );
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ContactList && runtimeType == other.runtimeType && pubKey == other.pubKey;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ContactList &&
+          runtimeType == other.runtimeType &&
+          pubKey == other.pubKey;
 
   @override
   int get hashCode => pubKey.hashCode;

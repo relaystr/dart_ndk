@@ -26,7 +26,11 @@ class PubkeyMapping {
   // coverage:ignore-end
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PubkeyMapping && runtimeType == other.runtimeType && pubKey == other.pubKey;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PubkeyMapping &&
+          runtimeType == other.runtimeType &&
+          pubKey == other.pubKey;
 
   @override
   int get hashCode => pubKey.hashCode;

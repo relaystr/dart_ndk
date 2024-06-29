@@ -23,11 +23,14 @@ dependencies:
   pointycastle: ^3.7.3
   plugin_platform_interface: ^2.1.7
 
-  isar: ^4.0.0-dev.14
-  isar_flutter_libs: ^4.0.0-dev.14
+  #isar: ^4.0.0-dev.14
+  #isar_flutter_libs: ^4.0.0-dev.14
 
   amberflutter: ^0.0.9
   logger: ^2.1.0
+  rust_lib_dart_ndk:
+    path: rust_builder
+  flutter_rust_bridge: 2.0.0
 
 #    git:
 #      url:  https://github.com/frnandu/amberflutter
@@ -43,7 +46,10 @@ dev_dependencies:
   flutter_lints: ^2.0.3
 #  ffigen: ^9.0.1
   build_runner: ^2.4.6
+  integration_test:
+    sdk: flutter
 #  freezed: ^2.4.5
+#  layerlens: ^1.0.17
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

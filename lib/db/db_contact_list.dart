@@ -5,7 +5,6 @@ part 'db_contact_list.g.dart';
 
 @Collection(inheritance: true)
 class DbContactList extends ContactList {
-
   DbContactList({required super.pubKey, required super.contacts});
 
   String get id => pubKey;
@@ -25,7 +24,6 @@ class DbContactList extends ContactList {
     dbContactList.petnames = contactList.petnames;
     return dbContactList;
   }
-
 
 // static DbContactList fromNip02ContactList(Nip02ContactList nip02contactList) {
   //   List<Contact> contacts = nip02contactList.contacts.map((contact) {
@@ -60,4 +58,3 @@ class DbContactList extends ContactList {
 //
 //   Contact(this.pubKey, this.petname, this.relay);
 // }
-

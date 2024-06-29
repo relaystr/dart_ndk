@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import '../../dart_ndk_platform_interface.dart';
 
 class AcinqSecp256k1EventVerifier extends Bip340EventVerifier {
-
   static const platform = MethodChannel('flutter.native/helper');
 
   @override
@@ -17,16 +16,17 @@ class AcinqSecp256k1EventVerifier extends Bip340EventVerifier {
       /// TODO implement JS binding for fast verification with some JS lib
       return true;
     }
-    if (Platform.isAndroid ) {
+    if (Platform.isAndroid) {
       bool? result;
       try {
-        result = await DartNdkPlatform.instance.verifySignature(event.sig, event.id, event.pubKey);
+        result = await DartNdkPlatform.instance
+            .verifySignature(event.sig, event.id, event.pubKey);
       } catch (e) {
         if (kDebugMode) {
           print(e);
         }
       }
-      if (result!=null) {
+      if (result != null) {
         return result;
       }
     }
