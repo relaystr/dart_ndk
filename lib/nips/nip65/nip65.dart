@@ -1,4 +1,5 @@
 import 'package:dart_ndk/nips/nip65/read_write_marker.dart';
+import 'package:dart_ndk/relay.dart';
 
 import '../nip01/event.dart';
 
@@ -7,7 +8,7 @@ class Nip65 {
 
   late String pubKey;
 
-  Map<String,ReadWriteMarker> relays = {};
+  Map<String, ReadWriteMarker> relays = {};
 
   Nip65.fromMap(this.pubKey, Map<String, ReadWriteMarker> map) {
     relays = map;
@@ -29,7 +30,12 @@ class Nip65 {
       final length = tag.length;
       if (length <= 1) continue;
       final name = tag[0];
-      final url = tag[1];
+
+      // clean the url so it can be used as a unique identifier
+      var cleanUrl = Relay.cleanUrl(tag[1]);
+      if (cleanUrl == null) continue;
+
+      final url = cleanUrl;
       if (name != "r") continue;
       ReadWriteMarker? marker = ReadWriteMarker.readWrite;
       if (length > 2) {

@@ -6,6 +6,7 @@ import 'package:dart_ndk/dart_ndk.dart';
 import 'package:dart_ndk/models/relay_set.dart';
 import 'package:dart_ndk/nips/nip01/bip340.dart';
 import 'package:dart_ndk/nips/nip01/event.dart';
+import 'package:dart_ndk/nips/nip01/event_verifier.dart';
 import 'package:dart_ndk/nips/nip01/filter.dart';
 import 'package:dart_ndk/nips/nip01/helpers.dart';
 import 'package:dart_ndk/nips/nip01/key_pair.dart';
@@ -13,9 +14,12 @@ import 'package:dart_ndk/nips/nip02/contact_list.dart';
 import 'package:dart_ndk/nips/nip65/nip65.dart';
 import 'package:dart_ndk/nips/nip65/read_write_marker.dart';
 import 'package:dart_ndk/read_write.dart';
+import 'package:dart_ndk/relay_jit_manager/relay_jit_manager.dart';
+import 'package:dart_ndk/relay_jit_manager/request_jit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../mocks/mock_event_verifier.dart';
 import '../mocks/mock_relay.dart';
 
 void main() async {
@@ -176,9 +180,18 @@ void main() async {
       ]);
     }
 
+
+    setUp(() async {
+      await startServers();
+    });
+
+    tearDown(() async {
+      await stopServers();
+    });
+
+
     // ================================================================================================
     test('query events from key that writes only on one relay', () async {
-      await startServers();
 
       RelayManager manager = RelayManager();
       await manager
@@ -203,16 +216,42 @@ void main() async {
         expect(event, key4TextNotes[key4]);
         // print(event);
       }
-
-      await stopServers();
     });
 
     // ================================================================================================
+    test('query events from key that writes only on one relay (JIT)', () async {
 
+      RelayJitManager manager = RelayJitManager(
+        seedRelays: [relay1.url, relay2.url, relay3.url, relay4.url],
+      );
+      EventVerifier eventVerifier = MockEventVerifier();
+
+      NostrRequestJit myquery = NostrRequestJit.query(
+        "test",
+        eventVerifier: eventVerifier,
+        filters: [
+          Filter(kinds: [
+            Nip01Event.TEXT_NODE_KIND
+          ], authors: [
+            key4.publicKey,
+          ]),
+        ],
+        desiredCoverage: 1,
+      );
+      manager.handleRequest(
+        myquery,
+      );
+      await for (final event in myquery.responseStream.take(4)) {
+        expect(event.sources, [relay4.url]);
+        expect(event, key4TextNotes[key4]);
+        // print(event);
+      }
+    });
+
+    // ================================================================================================
     test(
       // skip: 'WiP',
         'query all keys and do not use redundant relays', () async {
-      await startServers();
       RelayManager manager = RelayManager();
       await manager
           .connect(urls: [relay1.url, relay2.url, relay3.url, relay4.url]);
@@ -267,14 +306,53 @@ void main() async {
       /// todo: how to ALSO check if actually all notes are returned in the stream?
       //List<Nip01Event> expectedAllNotes = [...key1TextNotes.values, ...key2TextNotes.values, ...key3TextNotes.values, ...key4TextNotes.values];
       //expect(query, emitsInAnyOrder(key1TextNotes.values));
+    });
 
-      await stopServers();
+    // ================================================================================================
+    test(
+        skip: true,
+        'query all keys and do not use redundant relays (JIT)', () async {
+      RelayJitManager manager = RelayJitManager(
+        seedRelays: [relay1.url, relay2.url, relay3.url, relay4.url],
+      );
+      EventVerifier eventVerifier = MockEventVerifier();
+
+      /// query text notes for all keys, should discover where each key keeps its notes (according to nip65) and return all notes
+      /// only relay 1,2 & 4 should be used, since relay 3 keys are all also kept on relay 1 so should not be needed
+
+      NostrRequestJit myquery = NostrRequestJit.query(
+        "feed",
+        eventVerifier: eventVerifier,
+        filters: [
+          Filter(kinds: [
+            Nip01Event.TEXT_NODE_KIND
+          ], authors: [
+            key1.publicKey,
+            key2.publicKey,
+            key3.publicKey,
+            key4.publicKey
+          ]),
+        ],
+        desiredCoverage: 1,
+      );
+      manager.handleRequest(
+        myquery,
+      );
+      await for (final event in myquery.responseStream) {
+        print(event);
+        if (event.sources.contains(relay3.url)) {
+          fail("should not use relay 3 (${relay3.url}) in gossip model");
+        }
+      }
+
+      /// todo: how to ALSO check if actually all notes are returned in the stream?
+      //List<Nip01Event> expectedAllNotes = [...key1TextNotes.values, ...key2TextNotes.values, ...key3TextNotes.values, ...key4TextNotes.values];
+      //expect(query, emitsInAnyOrder(key1TextNotes.values));
     });
 
     test(
         "calculate best relays for relayMinCountPerPubKey=1 and check that it doesn't use redundant relays",
             () async {
-          await startServers();
           RelayManager manager = RelayManager();
           await manager
               .connect(urls: [relay1.url, relay2.url, relay3.url, relay4.url]);
@@ -306,13 +384,11 @@ void main() async {
           expect(relaySet.urls.contains(relay3.url), false);
           expect(relaySet.urls.contains(relay4.url), true);
           expect(relaySet.notCoveredPubkeys.isEmpty, true);
-          await stopServers();
-        });
+    });
 
     test(
         "calculate best relays for relayMinCountPerPubKey=2 and check that it doesn't use redundant relays",
             () async {
-          await startServers();
           RelayManager manager = RelayManager();
           await manager
               .connect(urls: [relay1.url, relay2.url, relay3.url, relay4.url]);
@@ -343,7 +419,6 @@ void main() async {
           expect(relaySet.urls.contains(relay3.url), false);
           expect(relaySet.urls.contains(relay4.url), true);
 
-          await stopServers();
         });
   });
   group("misc", () {

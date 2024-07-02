@@ -22,4 +22,9 @@ enum ReadWriteMarker {
   bool get isWrite =>
       this == ReadWriteMarker.writeOnly || this == ReadWriteMarker.readWrite;
 
+  /// Returns true if this marker is a subset of the other marker.
+  /// returns true for readOnly == readWrite and writeOnly == readWrite
+  bool isPartialMatch(ReadWriteMarker other) {
+    return isRead == other.isRead || isWrite == other.isWrite;
+  }
 }

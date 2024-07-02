@@ -4,7 +4,6 @@ import 'package:crypto/crypto.dart';
 import 'package:dart_ndk/nips/nip01/bip340.dart';
 
 class Nip01Event {
-
   static const int TEXT_NODE_KIND = 1;
 
   /// Creates a new Nostr event.
@@ -21,16 +20,23 @@ class Nip01Event {
     required this.kind,
     required this.tags,
     required this.content,
-    int createdAt=0,
+    int createdAt = 0,
   }) {
-    this.createdAt = (createdAt==0) ?  DateTime
-        .now()
-        .millisecondsSinceEpoch ~/ 1000 : createdAt;
+    this.createdAt = (createdAt == 0)
+        ? DateTime.now().millisecondsSinceEpoch ~/ 1000
+        : createdAt;
     id = _calculateId(pubKey, this.createdAt, kind, tags, content);
   }
 
-  Nip01Event._(this.id, this.pubKey, this.createdAt, this.kind, this.tags,
-      this.content, this.sig);
+  Nip01Event._(
+    this.id,
+    this.pubKey,
+    this.createdAt,
+    this.kind,
+    this.tags,
+    this.content,
+    this.sig,
+  );
 
   factory Nip01Event.fromJson(Map<dynamic, dynamic> data) {
     final id = data['id'] as String;
@@ -145,11 +151,11 @@ class Nip01Event {
   }
 
   List<String> get tTags {
-    return getTags(tags,"t");
+    return getTags(tags, "t");
   }
 
   List<String> get pTags {
-    return getTags(tags,"p");
+    return getTags(tags, "p");
   }
 
   String? getDtag() {

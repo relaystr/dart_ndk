@@ -14,7 +14,18 @@ class Filter {
   int? until;
   int? limit;
 
-  Filter({this.ids, this.authors, this.kinds, this.eTags, this.pTags, this.tTags, this.aTags, this.dTags, this.since, this.until, this.limit});
+  Filter(
+      {this.ids,
+      this.authors,
+      this.kinds,
+      this.eTags,
+      this.pTags,
+      this.tTags,
+      this.aTags,
+      this.dTags,
+      this.since,
+      this.until,
+      this.limit});
 
   Filter.fromMap(Map<String, dynamic> map) {
     ids = map['ids'] == null ? null : List<String>.from(map['ids']);
@@ -67,5 +78,16 @@ class Filter {
     Map<String, dynamic> map = toMap();
     map['#p'] = pTags;
     return Filter.fromMap(map);
+  }
+
+  Filter.mergeAuthors(Filter filter1, Filter filter2) {
+    Map<String, dynamic> map = filter1.toMap();
+    if (filter1.authors == null || filter2.authors == null) {
+      throw Exception("Filter does not contain authors");
+    }
+    map['authors'] = [...filter1.authors!, ...filter2.authors!];
+    // remove duplicates
+    map['authors'] = map['authors'].toSet().toList();
+    Filter.fromMap(map);
   }
 }

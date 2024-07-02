@@ -13,7 +13,7 @@ class Relay {
   Relay(this.url);
 
   bool supportsNip(int nip) {
-    return info!=null && info!.nips.contains(nip);
+    return info != null && info!.nips.contains(nip);
   }
 
   void tryingToConnect() {
@@ -31,13 +31,18 @@ class Relay {
   }
 
   bool wasLastConnectTryLongerThanSeconds(int seconds) {
-    return lastConnectTry==null || lastConnectTry! < DateTime.now().add(Duration(seconds: -seconds)).millisecondsSinceEpoch ~/ 1000;
+    return lastConnectTry == null ||
+        lastConnectTry! <
+            DateTime.now()
+                    .add(Duration(seconds: -seconds))
+                    .millisecondsSinceEpoch ~/
+                1000;
   }
 
   static RegExp RELAY_URL_REGEX = RegExp(
       r'^(wss?:\/\/)([0-9]{1,3}(?:\.[0-9]{1,3}){3}|[^:]+):?([0-9]{1,5})?$');
 
-  static String? clean(String adr) {
+  static String? cleanUrl(String adr) {
     if (adr.endsWith("/")) {
       adr = adr.substring(0, adr.length - 1);
     }

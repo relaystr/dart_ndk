@@ -27,6 +27,7 @@ dependencies:
   isar_flutter_libs: ^4.0.0-dev.14
 
   amberflutter: ^0.0.9
+  logger: ^2.1.0
 
 #    git:
 #      url:  https://github.com/frnandu/amberflutter

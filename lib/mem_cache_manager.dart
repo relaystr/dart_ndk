@@ -10,7 +10,6 @@ import 'nips/nip01/metadata.dart';
 import 'nips/nip05/nip05.dart';
 
 class MemCacheManager implements CacheManager {
-
   Map<String, UserRelayList> userRelayLists = {};
   Map<String, RelaySet> relaySets = {};
   Map<String, ContactList> contactLists = {};
@@ -56,12 +55,13 @@ class MemCacheManager implements CacheManager {
   Nip05? loadNip05(String pubKey) {
     return nip05s[pubKey];
   }
+
   @override
   List<Nip05?> loadNip05s(List<String> pubKeys) {
     List<Nip05> result = [];
-    for(String pubKey in pubKeys) {
+    for (String pubKey in pubKeys) {
       Nip05? nip05 = nip05s[pubKey];
-      if (nip05!=null) {
+      if (nip05 != null) {
         result.add(nip05);
       }
     }
@@ -86,10 +86,10 @@ class MemCacheManager implements CacheManager {
   }
 
   /// **************************************************************************
-  
+
   @override
   RelaySet? loadRelaySet(String name, String pubKey) {
-    return relaySets[RelaySet.buildId(name,pubKey)];
+    return relaySets[RelaySet.buildId(name, pubKey)];
   }
 
   @override
@@ -164,9 +164,9 @@ class MemCacheManager implements CacheManager {
   @override
   List<Metadata?> loadMetadatas(List<String> pubKeys) {
     List<Metadata> result = [];
-    for(String pubKey in pubKeys) {
+    for (String pubKey in pubKeys) {
       Metadata? metadata = metadatas[pubKey];
-      if (metadata!=null) {
+      if (metadata != null) {
         result.add(metadata);
       }
     }
@@ -181,38 +181,52 @@ class MemCacheManager implements CacheManager {
 
   @override
   Nip01Event? loadEvent(String id) {
-    // TODO: implement loadEvent
-    return null;
+    return events[id];
   }
 
   @override
-  List<Nip01Event> loadEvents({List<String>? pubKeys, List<int>? kinds, String? pTag}) {
-    // TODO: implement saveEvents
-    return [];
+  List<Nip01Event> loadEvents(
+      {List<String>? pubKeys, List<int>? kinds, String? pTag}) {
+    List<Nip01Event> result = [];
+    for (var event in events.values) {
+      if (pubKeys != null && !pubKeys.contains(event.pubKey)) {
+        continue;
+      }
+      if (kinds != null && !kinds.contains(event.kind)) {
+        continue;
+      }
+      if (pTag != null && !event.pTags.contains(pTag)) {
+        continue;
+      }
+      result.add(event);
+    }
+    return result;
   }
 
   @override
   Future<void> removeAllEventsByPubKey(String pubKey) async {
-    // TODO: implement saveEvents
+    events.removeWhere((key, value) => value.pubKey == pubKey);
   }
 
   @override
   Future<void> removeAllEvents() async {
-    // TODO: implement removeAllEvents
+    events.clear();
   }
 
   @override
   Future<void> removeEvent(String id) async {
-    // TODO: implement removeEvent
+    events.remove(id);
   }
 
   @override
   Future<void> saveEvent(Nip01Event event) async {
-    // TODO: implement saveEvent
+    events[event.id] = event;
   }
 
   @override
   Future<void> saveEvents(List<Nip01Event> events) async {
-    // TODO: implement saveEvents
+    for (var event in events) {
+      this.events[event.id] = event;
+    }
   }
 }
