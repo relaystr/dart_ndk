@@ -12,6 +12,7 @@ import 'package:dart_ndk/nips/nip01/key_pair.dart';
 import 'package:dart_ndk/nips/nip02/contact_list.dart';
 import 'package:dart_ndk/nips/nip65/nip65.dart';
 import 'package:dart_ndk/nips/nip65/read_write_marker.dart';
+import 'package:dart_ndk/nostr.dart';
 import 'package:dart_ndk/read_write.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -492,7 +493,7 @@ void main() async {
 
         KeyPair key = KeyPair.justPublicKey(Helpers.decodeBech32(npub)[0]);
 
-        ContactList? contactList = await manager.loadContactList(key.publicKey);
+        ContactList? contactList = await Nostr(relayManager: manager).loadContactList(key.publicKey);
 
         expect(contactList != null, true);
 
@@ -512,7 +513,7 @@ void main() async {
               });
           bestRelays.name = setName;
           bestRelays.pubKey = key.publicKey;
-          await manager.saveRelaySet(bestRelays);
+//          await manager.saveRelaySet(bestRelays);
         } else {
           final startTime = DateTime.now();
           if (kDebugMode) {

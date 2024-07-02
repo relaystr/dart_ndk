@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dart_ndk/dart_ndk.dart';
 import 'package:dart_ndk/nips/nip01/event.dart';
-import 'package:dart_ndk/nips/nip01/event_verifier.dart';
 
 import 'nips/nip01/filter.dart';
 
@@ -17,7 +16,6 @@ class RelayRequest {
 // Requests made to several relays, identified by same id
 class NostrRequest {
   String id;
-  EventVerifier eventVerifier;
 
   Map<String, RelayRequest> requests = {};
 
@@ -37,12 +35,11 @@ class NostrRequest {
   NostrRequest.query(
     this.id, {
     this.closeOnEOSE = true,
-    required this.eventVerifier,
     this.timeout = RelayManager.DEFAULT_STREAM_IDLE_TIMEOUT + 1,
     this.onTimeout,
   });
 
-  NostrRequest.subscription(this.id, {this.closeOnEOSE = false, required this.eventVerifier});
+  NostrRequest.subscription(this.id, {this.closeOnEOSE = false});
 
 
   bool get didAllRequestsReceivedEOSE => !requests.values.any((element) => !element.receivedEOSE);
