@@ -9,6 +9,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 String greet({required String name}) =>
     RustLib.instance.api.crateApiSimpleGreet(name: name);
 
+///! mock verification! (testing) always returns true
 Future<bool> verifyEvent(
         {required String id, required String pubkey, required String sig}) =>
     RustLib.instance.api
