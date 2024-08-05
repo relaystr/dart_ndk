@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_print
-import 'package:dart_ndk/nips/nip01/bip340.dart';
-import 'package:dart_ndk/nips/nip01/event.dart';
-import 'package:dart_ndk/nips/nip01/key_pair.dart';
-import 'package:dart_ndk/nips/nip65/read_write_marker.dart';
-import 'package:dart_ndk/relay_jit_manager/relay_jit.dart';
-import 'package:dart_ndk/relay_jit_manager/relay_jit_manager.dart';
+import 'package:dart_ndk/shared/nips/nip01/bip340.dart';
+import 'package:dart_ndk/domain_layer/entities/nip_01_event.dart';
+import 'package:dart_ndk/shared/nips/nip01/key_pair.dart';
+import 'package:dart_ndk/domain_layer/entities/read_write_marker.dart';
+import 'package:dart_ndk/domain_layer/usecases/relay_jit_manager/relay_jit.dart';
+import 'package:dart_ndk/domain_layer/usecases/jit_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() async {
@@ -36,7 +36,7 @@ void main() async {
 
   group('check doesRelayCoverPubkey()', () {
     // setup
-    RelayJitManager relayJitManager = RelayJitManager();
+    JitEngine relayJitManager = JitEngine();
 
     RelayJit relayReadOnly = RelayJit('wss://relay.camelus.app');
     relayReadOnly.assignedPubkeys
@@ -58,13 +58,13 @@ void main() async {
     relayJitManager.connectedRelays.add(relayUnassigend);
     test('test readOnly relay', () {
       // check
-      final resultRequestRo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRo = JitEngine.doesRelayCoverPubkey(
           relayReadOnly, key1.publicKey, ReadWriteMarker.readOnly);
 
-      final resultRequestWo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestWo = JitEngine.doesRelayCoverPubkey(
           relayReadOnly, key1.publicKey, ReadWriteMarker.writeOnly);
 
-      final resultRequestRW = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRW = JitEngine.doesRelayCoverPubkey(
           relayReadOnly, key1.publicKey, ReadWriteMarker.readWrite);
 
       expect(resultRequestRo, true);
@@ -74,13 +74,13 @@ void main() async {
 
     test('test writeOnly relay', () {
       // check
-      final resultRequestRo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRo = JitEngine.doesRelayCoverPubkey(
           relayWriteOnly, key1.publicKey, ReadWriteMarker.readOnly);
 
-      final resultRequestWo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestWo = JitEngine.doesRelayCoverPubkey(
           relayWriteOnly, key1.publicKey, ReadWriteMarker.writeOnly);
 
-      final resultRequestRW = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRW = JitEngine.doesRelayCoverPubkey(
           relayWriteOnly, key1.publicKey, ReadWriteMarker.readWrite);
 
       expect(resultRequestRo, false);
@@ -90,13 +90,13 @@ void main() async {
 
     test('test readWrite relay', () {
       // check
-      final resultRequestRo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRo = JitEngine.doesRelayCoverPubkey(
           relayReadWrite, key1.publicKey, ReadWriteMarker.readOnly);
 
-      final resultRequestWo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestWo = JitEngine.doesRelayCoverPubkey(
           relayReadWrite, key1.publicKey, ReadWriteMarker.writeOnly);
 
-      final resultRequestRW = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRW = JitEngine.doesRelayCoverPubkey(
           relayReadWrite, key1.publicKey, ReadWriteMarker.readWrite);
 
       expect(resultRequestRo, true);
@@ -105,13 +105,13 @@ void main() async {
     });
     test('relay without assignments', () {
       // check
-      final resultRequestRo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRo = JitEngine.doesRelayCoverPubkey(
           relayUnassigend, key1.publicKey, ReadWriteMarker.readOnly);
 
-      final resultRequestWo = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestWo = JitEngine.doesRelayCoverPubkey(
           relayUnassigend, key1.publicKey, ReadWriteMarker.writeOnly);
 
-      final resultRequestRW = RelayJitManager.doesRelayCoverPubkey(
+      final resultRequestRW = JitEngine.doesRelayCoverPubkey(
           relayUnassigend, key1.publicKey, ReadWriteMarker.readWrite);
 
       expect(resultRequestRo, false);

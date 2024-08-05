@@ -1,7 +1,7 @@
 import 'package:dart_ndk/dart_ndk.dart';
-import 'package:dart_ndk/nips/nip01/bip340.dart';
-import 'package:dart_ndk/nips/nip01/event.dart';
-import 'package:dart_ndk/nips/nip01/metadata.dart';
+import 'package:dart_ndk/shared/nips/nip01/bip340.dart';
+import 'package:dart_ndk/domain_layer/entities/nip_01_event.dart';
+import 'package:dart_ndk/domain_layer/entities/metadata.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hex/hex.dart';
@@ -40,12 +40,11 @@ void main() {
       metadata.pubKey = "pubKey1";
       Map<String, dynamic> toJson = <String, dynamic>{};
       toJson = metadata.toJson();
-      expect(data,toJson);
+      expect(data, toJson);
 
       Nip01Event event = metadata.toEvent();
       Metadata metadataFromEvent = Metadata.fromEvent(event);
-      expect(metadata,metadataFromEvent);
-
+      expect(metadata, metadataFromEvent);
     });
   });
 }

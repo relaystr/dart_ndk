@@ -97,3 +97,4 @@ more details on https://mikedilger.com/gossip-model/
 |**JIT**|Just In Time, e.g. as it happens| -
 |**query**|get data once and close the request| get request
 |**subscription**|stream of events as they come in | stream of data
+|**bootstrapRelays**|default relays to connect when nothing else is specified | seed relays, initial relays

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:dart_ndk/nips/nip01/bip340.dart';
-import 'package:dart_ndk/nips/nip01/bip340_event_signer.dart';
-import 'package:dart_ndk/nips/nip01/key_pair.dart';
-import 'package:dart_ndk/nips/nip04/nip04.dart';
+import 'package:dart_ndk/shared/nips/nip01/bip340.dart';
+import 'package:dart_ndk/data_layer/repositories/signers/bip340_event_signer.dart';
+import 'package:dart_ndk/shared/nips/nip01/key_pair.dart';
+import 'package:dart_ndk/shared/nips/nip04/nip04.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -68,9 +68,11 @@ void main() {
       KeyPair key1 = Bip340.generatePrivateKey();
       var agreement = Nip04.getAgreement(key1.privateKey!);
       String content = "some content";
-      var encrypted = Nip04.encryptWithAgreement(content, agreement, key1.publicKey);
+      var encrypted =
+          Nip04.encryptWithAgreement(content, agreement, key1.publicKey);
 
-      var decrypted = Nip04.decryptWithAgreement(encrypted, agreement, key1.publicKey);
+      var decrypted =
+          Nip04.decryptWithAgreement(encrypted, agreement, key1.publicKey);
       expect(content, decrypted);
     });
   });

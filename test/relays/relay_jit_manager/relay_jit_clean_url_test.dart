@@ -1,4 +1,4 @@
-import 'package:dart_ndk/relay_jit_manager/relay_jit.dart';
+import 'package:dart_ndk/domain_layer/usecases/relay_jit_manager/relay_jit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:developer' as developer;
 

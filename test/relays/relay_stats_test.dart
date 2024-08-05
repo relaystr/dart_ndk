@@ -1,4 +1,4 @@
-import 'package:dart_ndk/relay_stats.dart';
+import 'package:dart_ndk/domain_layer/entities/relay_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() async {

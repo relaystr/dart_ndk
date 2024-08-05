@@ -1,4 +1,4 @@
-import 'package:dart_ndk/nips/nip11/relay_info.dart';
+import 'package:dart_ndk/domain_layer/entities/relay_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
